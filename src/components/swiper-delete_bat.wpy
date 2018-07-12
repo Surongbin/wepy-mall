@@ -1,0 +1,70 @@
+<!--左滑删除-->
+<template>
+    <view class="swipe-left">
+        <view class="swipe-content" @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend">
+            <slot></slot>
+        </view>
+        <view class="swipe-opts">
+            <view class="opts-delete">删除</view>
+        </view>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    export default class SwipeLeft extends wepy.component {
+        methods = {
+            touchstart(e) {
+                console.log('touchstart'+e);
+                this.startX = e.touches[0].clientX;
+            },
+            touchmove(e) {
+                let distance = this.startX - e.touches[0].clientX;
+                console.log(distance);
+                if (distance > 70) {
+
+                }
+            },
+            touchend(e) {
+                console.log('touchend'+e);
+            }
+        }
+    }
+</script>
+<style lang='less'>
+    .swipe-left {
+        position: relative;
+        height: 100%;
+        overflow: hidden;
+        /*&::-webkit-scrollbar {*/
+            /*display: none;*/
+        /*}*/
+        .swipe-content {
+            /*display: inline-block;*/
+            /*width: 100%;*/
+            /*height: 100%;*/
+            position: absolute;
+            top:0;
+            left: 0;
+            width: 100%;
+            z-index: 5;
+        }
+        .swipe-opts {
+            position: absolute;
+            top:0;
+            z-index: 4;
+            right: 0;
+            display: inline-block;
+            vertical-align:top;
+            height: 238rpx;
+            line-height: 238rpx;
+            text-align: center;
+        }
+        .opts-delete {
+            width: 140rpx;
+            height: 100%;
+            background: #fd6a9d;
+            font-size: 28rpx;
+            color: #fff;
+        }
+    }
+</style>

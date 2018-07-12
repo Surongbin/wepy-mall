@@ -1,0 +1,312 @@
+<template>
+    <view class="shopcart">
+        <text class="title">全场满99元包邮</text>
+        <repeat for="{{list}}" key="index" index="index" item="item">
+            <view class="box">
+                <swipedelete :swipeData="item">
+                    <view class="goods">
+                        <view data-item="{{item}}" data-index="{{index}}" class="iconfont {{item.ischecked?'icon-checkcircle':'icon-checknormal'}}" @tap.stop="selectTap"></view>
+                        <!--<icon type="success" color="{{item.ischecked?'red': rgba(153,153,153)}}" size="46" @tap.stop="selectTap(item)"></icon>-->
+                        <view class="goods_image">
+                            <image src="{{item.spec_image}}"></image>
+                        </view>
+                        <view class="goods_center">
+                            <view class="goods_name">{{item.product_name}}</view>
+                            <view class="goods_spec">{{item.spec_name}}</view>
+                        </view>
+                        <view class="goods_right">
+                            <view class="goods_price">¥{{item.price}}</view>
+                            <view class="goods_couter">
+                                <view class="count_opt" @tap.stop="minustap" data-index="{{index}}">-</view>
+                                <view class="count_num">{{item.count}}</view>
+                                <view class="count_opt" @tap.stop="addtap" data-index="{{index}}">+</view>
+                            </view>
+                        </view>
+                    </view>
+                </swipedelete>
+            </view>
+        </repeat>
+    </view>
+    <view class="empty-cart" wx:if="{{list.length === 0}}">
+        空空如也
+    </view>
+    <view class="total" wx:if="{{list.length > 0}}">
+        <view class="iconfont {{checkAll?'icon-checkcircle':'icon-checknormal'}}" @tap.stop="selectAll"></view>
+        <text class="total-all">全选</text>
+        <view>
+            <text class="total-price">合计：¥{{computePrice}}元</text>
+            <view class="total-btn">结算({{checkedLength}})</view>
+        </view>
+
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import api from '../api/cart.js'
+    import SwipeDelete from 'components/swiper-delete'
+    export default class ShopCart extends wepy.component {
+        props = {
+
+        }
+        data = {
+            list: [],
+            checkedLength: 0,
+            checkAll: false,
+            left: 0,
+            totalPrice: 0
+        }
+        components = {
+            swipedelete: SwipeDelete
+        }
+        async getcartlist() {
+            const res = await api.list({});
+            console.log(res);
+            if (res.meta.code === 0) {
+                this.list = this.list.concat(res.response.list);
+                this.list = [{
+                    id: 1,
+                    product_name: '美图自拍遥控器',
+                    count: 1,
+                    price: 89,
+                    spec_image: '//mshopimg3.meitudata.com/596c1a9059d3056182.jpg',
+                    spec_name: '白色'
+                },{
+                    id: 2,
+                    product_name: '美图自拍第二代遥控器',
+                    count: 1,
+                    price: 89,
+                    spec_image: '//mshopimg3.meitudata.com/596c1a9059d3056182.jpg',
+                    spec_name: '白色'
+                },{
+                    id: 3,
+                    product_name: '美图自拍第二代遥控器',
+                    count: 1,
+                    price: 89,
+                    spec_image: '//mshopimg3.meitudata.com/596c1a9059d3056182.jpg',
+                    spec_name: '白色'
+                },{
+                    id: 4,
+                    product_name: '美图自拍第二代遥控器',
+                    count: 1,
+                    price: 89,
+                    spec_image: '//mshopimg3.meitudata.com/596c1a9059d3056182.jpg',
+                    spec_name: '白色'
+                },{
+                    id: 5,
+                    product_name: '美图自拍第二代遥控器',
+                    count: 1,
+                    price: 89,
+                    spec_image: '//mshopimg3.meitudata.com/596c1a9059d3056182.jpg',
+                    spec_name: '白色'
+                },{
+                    id: 6,
+                    product_name: '美图自拍第二代遥控器',
+                    count: 1,
+                    price: 89,
+                    spec_image: '//mshopimg3.meitudata.com/596c1a9059d3056182.jpg',
+                    spec_name: '白色'
+                }];
+                this.$apply();
+            }
+        }
+        watch = {
+            checkedLength(newVal, oldVal) {
+                this.checkAll = newVal === this.list.length ? true : false;
+            }
+        }
+        computed = {
+            computePrice() {
+                this.totalPrice = 0;
+                this.list.map((item) => {
+                    if (item.ischecked) {
+                        this.totalPrice += item.price;
+                    }
+                });
+                return this.totalPrice;
+            }
+        }
+        methods = {
+            getList() {
+                this.getcartlist();
+            },
+            selectTap(e) {
+                let index = e.currentTarget.dataset.index;
+                if (this.list[index].ischecked) {
+                    this.checkedLength--;
+                } else {
+                    this.checkedLength++;
+                }
+                this.list[index].ischecked = !this.list[index].ischecked;
+            },
+            selectAll(e) {
+                this.list.map((item) => {
+                    item.ischecked = !this.checkAll;
+                });
+                this.checkAll = !this.checkAll;
+            },
+            minustap(e) {
+                let index = e.currentTarget.dataset.index;
+                let item = this.list[index];
+                if (item.count === 1) {
+                    return;
+                }
+                item.count--;
+            },
+            addtap(e) {
+                console.log(e);
+                let index = e.currentTarget.dataset.index;
+                let item = this.list[index];
+                item.count++;
+            },
+        }
+    }
+</script>
+<style lang='less'>
+    .shopcart {
+        background: #efeff4;
+        line-height: 1.5;
+        height: 100%;
+        width: 100%;
+        margin-bottom: 90rpx;
+        .title {
+            font-size: 26rpx;
+            color: #999;
+            height: 70rpx;
+            line-height: 70rpx;
+            padding-left: 29rpx;
+        }
+        /*.box {*/
+            /*overflow-x: auto;*/
+            /*white-space: nowrap;*/
+        /*}*/
+        .box {
+            height: 238rpx;
+            border-bottom: 3px solid #efeff4;
+        }
+        .goods {
+            position: relative;
+            display: inline-block;
+            font-size: 28rpx;
+            padding: 25rpx 29rpx;
+            height: 238rpx;
+            width: 100%;
+            box-sizing: border-box;
+            color: #333;
+            background: #fff;
+
+            &:last-child {
+                border: 0;
+             }
+            .goods_image {
+                /*height: 100%;*/
+                float: left;
+                margin-top: 30rpx;
+            }
+            image {
+                height: 120rpx;
+                width: 120rpx;
+            }
+            .goods_spec {
+                font-size: 26rpx;
+                color: #999;
+            }
+            .goods_couter {
+                border: 1rpx solid #efeff4;
+                display: flex;
+            }
+            .count_opt {
+                display:inline-block;
+                width: 50rpx;
+                height: 49rpx;
+                line-height: 49rpx;
+                text-align: center;
+                background: #efeff4;
+                flex: 1;
+            }
+            .count_num {
+                display:inline-block;
+                min-width: 48rpx;
+                height: 49rpx;
+                line-height: 49rpx;
+                text-align: center;
+                flex: 1;
+                /*border: 1rpx solid #efeff4;*/
+            }
+            .goods_center {
+                /*width: 100%;*/
+                height: 100%;
+                margin-left: 120rpx;
+                /*margin-left: 269rpx;*/
+                margin-right: 161rpx;
+            }
+            .goods_right {
+                width: 151rpx;
+                height: 100%;
+                /*height: 188rpx;*/
+                position:absolute;
+                right:29rpx;
+                top:0;
+            }
+            .goods_name {
+                margin-top: 31rpx;
+                height: 100rpx;
+            }
+            .goods_price {
+                text-align: right;
+                margin: 56rpx 0;
+            }
+        }
+    }
+    .total {
+        display: flex;
+        height: 90rpx;
+        line-height: 90rpx;
+        width: 100%;
+        background: #fff;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        padding-left: 24rpx;
+        .total-btn {
+            display: inline-block;
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 231rpx;
+            height: 90rpx;
+            background: #fd6a9d;
+            color: #fff;
+            font-size: 28rpx;
+            text-align: center;
+        }
+        text {
+            font-size: 28rpx;
+            color: #333;
+        }
+        .total-all {
+            float: left;
+            margin-left: 15rpx;
+        }
+        .total-price {
+            position: absolute;
+            top: 0;
+            right: 251rpx;
+            height: 90rpx;
+        }
+    }
+    .iconfont {
+        width: 46rpx;
+        height: 46rpx;
+        font-size: 46rpx;
+    }
+    .swipe-opts {
+        display: inline-block;
+        height: 100%;
+        /*float: left;*/
+    }
+    .opts-delete {
+        width: 140rpx;
+        height: 100%;
+        background: #fd6a9d;
+    }
+</style>

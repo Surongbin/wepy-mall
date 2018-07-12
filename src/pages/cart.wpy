@@ -1,0 +1,42 @@
+<!--购物车-->
+<style>
+</style>
+<template>
+  <button type="default" bindtap="jump"> navigateTo跳转 </button>
+  <button type="default" bindtap="redirectTo"> redirectTo跳转 </button>
+  <button type="default" bindtap="switchTab"> switchTab跳转 </button>
+  <shopcart></shopcart>
+</template>
+<script>
+  import wepy from 'wepy'
+  import ShopCart from 'components/shop-cart'
+
+  export default class Cart extends wepy.page {
+    components = {
+      shopcart : ShopCart
+    }
+    methods = {
+      jump() {
+        wepy.navigateTo({
+          url: "/pages/personal/personal?orderNo=1"
+        })
+//        wepy.navigateTo({
+//          url: '/pages/personal/delivery?id=1'
+//        });
+      },
+      redirectTo () {
+        wepy.redirectTo({
+          url: "/pages/personal/personal?orderNo=1"
+        })
+      },
+      switchTab() {
+        wx.switchTab({
+          url: '/pages/personal/delivery?param=1',   //注意switchTab只能跳转到带有tab的页面，不能跳转到不带tab的页面
+        })
+      }
+    }
+    onShow() {
+      this.$invoke('shopcart', 'getList');
+    }
+  }
+</script>

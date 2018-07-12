@@ -1,0 +1,102 @@
+<!--左滑删除-->
+<template>
+    <scroll-view class="swipe-left" @touchstart="touchstart" @touchend="touchend" data-itemid="{{itemid}}" scroll-left='{{left}}' scroll-x="true" scroll-into-view="{{toView}}" style="width: 100%;" upper-threshold="{{haftDelta}}" lower-threshold="{{haftDelta}}" scroll-with-animation="true" bindscroll="bindscroll" bindscrolltoupper="bindscrolltoupper" bindscrolltolower="bindscrolltolower">
+        <view class="swipe-content" id="{{'content'+swiptData.id}}">
+            <slot></slot>
+        </view>
+        <view class="swipe-opts" id="{{'id'+swiptData.id}}">
+            <view class="opts-delete">删除</view>
+        </view>
+    </scroll-view>
+</template>
+<script>
+    import wepy from 'wepy'
+    export default class SwipeLeft extends wepy.component {
+        // repeat组件里面不能再传props,wepy的限制
+        props = {
+            swiptData: {
+                type: Object,
+                default: {}
+            },
+            itemid: {
+                type: Number,
+                default: 0
+            }
+        };
+        data = {
+            left: 0,
+            maxScrollLeft: 0,
+            toView: '',
+            haftDelta: 50,
+            targetid: '',
+            scrollEvent: ''
+        }
+        methods = {
+            bindscrolltoupper(e) {
+                this.toView = 'content' + this.targetid;
+            },
+            bindscrolltolower(e) {
+                this.toView = 'id' + this.targetid;
+            },
+            bindscroll(e) {
+                this.scrollEvent = e;
+                if (!this.maxScrollLeft) {
+                    this.maxScrollLeft = e.detail.scrollWidth - wx.getSystemInfoSync().windowWidth;
+                    this.haftDelta = this.maxScrollLeft/2;
+                }
+                this.targetid = e.target.dataset.itemid;
+            },
+            touchstart(e) {
+                if (this.targetid && e.currentTarget && e.currentTarget.dataset.itemid !== this.targetid) {
+                    this.toView = 'content' + this.targetid;
+                }
+                this.targetid = e.currentTarget.dataset.itemid;
+            },
+            touchend(evt) {
+                let e = this.scrollEvent;
+                if (!e.detail) {
+                    return;
+                }
+                let scrollLeft = e.detail.scrollLeft;
+                if (scrollLeft >= this.haftDelta) {
+                    this.toView = 'id' + this.targetid;
+                } else {
+                    this.toView = 'content' + this.targetid;
+                }
+                this.$apply();
+            }
+        }
+    }
+</script>
+<style lang='less'>
+    .swipe-left {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        overflow-y: hidden;;
+        overflow-x: auto;
+        white-space: nowrap;
+        &::-webkit-scrollbar {
+            display: none;
+        }
+        .swipe-content {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+        }
+        .swipe-opts {
+            display: inline-block;
+            vertical-align:top;
+            height: 238rpx;
+            line-height: 238rpx;
+            text-align: center;
+        }
+        .opts-delete {
+            width: 140rpx;
+            height: 100%;
+            background: #fd6a9d;
+            font-size: 28rpx;
+            color: #fff;
+        }
+    }
+</style>

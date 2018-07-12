@@ -1,0 +1,23 @@
+<!--个人中心-->
+<style>
+</style>
+<template>
+  <view>
+    个人中心
+    <button type="default" bindtap="back"> 返回 </button>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+
+  export default class personal extends wepy.page {
+    methods = {
+      back() {
+        wepy.navigateBack();
+      }
+    }
+    onLoad (option) {
+      console.log(option);
+    }
+  }
+</script>

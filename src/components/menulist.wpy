@@ -1,0 +1,60 @@
+<style type="less">
+  .menulist {
+    .column-list {
+      transition: height .3s cubic-bezier(.28,.11,.32,1) .2s,visibility 0s linear 1s;
+      overflow: hidden;
+      height: 0;
+      opcatiy: 0;
+      &.showmenu {
+        height: auto;
+        opacity: 1;
+       }
+    }
+  }
+</style>
+<template>
+  <view class="menulist">
+    <repeat for="{{menulist}}" item="item">
+      <menuitem :menu="item"></menuitem>
+      <view class="column-list {{item.isExpand?'showmenu':''}}">
+        <repeat for="{{item.list}}" item="submenu">
+          <menuitem :menu="submenu" class="submenu"></menuitem>
+        </repeat>
+      </view>
+    </repeat>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import MenuItem from './menuitem'
+
+  export default class MenuList extends wepy.component {
+
+    props = {
+      menulist: {
+        type: Array,
+        default: []
+      }
+    }
+    data = {
+      menu: 'dd'
+    }
+    components = {
+      menuitem: MenuItem
+    }
+    events = {
+      'tapmenu': (menu, p2, p3, $event) => {
+        menu.isExpand = true;
+      }
+    };
+    methods = {
+      tap (data) {
+        console.log(data);
+        if (data.list && data.list.length > 0) {
+
+          data.isExpand = !data.isExpand;
+        }
+      },
+    }
+  }
+</script>

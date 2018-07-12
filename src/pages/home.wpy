@@ -1,0 +1,52 @@
+<!--首页-->
+<style lang="less">
+  .swiper-container {
+    position: relative;
+  }
+</style>
+<template>
+  <header></header>
+  <view style="height:{{height}}px;" class="swiper-container">
+      <slider :imgUrls="imgUrls" :swiperCurrent="swiperCurrent" bindchange="toChange">
+      </slider>
+  </view>
+
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import Slider from '@/components/slider'
+  import Header from '@/components/header'
+
+  export default class Home extends wepy.page {
+    config = {
+      window: {
+        backgroundTextStyle: 'light',
+        navigationBarBackgroundColor: '#fff',
+        navigationBarTitleText: 'WeChat',
+        navigationBarTextStyle: 'black'
+      }
+    };
+    data = {
+      imgUrls: [
+        'https://mtshop1.meitudata.com/5b039337654a717823.jpg',
+        'https://mtshop1.meitudata.com/5aeeefb9ca38d21951.jpg',
+        'https://mtshop1.meitudata.com/5af00aca8be2742380.jpg',
+        'https://mtshop1.meitudata.com/5af00978998e535474.jpg'
+      ],
+      height: 0,
+      swiperCurrent: 0
+    };
+    components = {
+      slider: Slider,
+      header: Header
+    };
+    toChange(e) {
+      console.log('swiperChange');
+      this.swiperCurrent = e.detail.current;
+    }
+    onLoad() {
+      this.height = wx.getSystemInfoSync().windowHeight-48;
+    }
+  }
+</script>

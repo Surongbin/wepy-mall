@@ -1,0 +1,16 @@
+{
+	"description": "A WePY project",
+	"setting": {
+		"urlCheck": true,
+		"es6": false,
+		"postcss": false,
+		"minified": false,
+		"newFeature": true
+	},
+	"compileType": "miniprogram",
+	"appid": "wxe2ca35879e9f6260",
+	"projectname": "wx-demo",
+	"miniprogramRoot": "./dist",
+	"libVersion": "1.9.94",
+	"condition": {}
+}

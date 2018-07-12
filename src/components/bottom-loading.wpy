@@ -1,0 +1,36 @@
+<style lang="less">
+  .bottom-loading {
+    text-align: center;
+    image {
+      width: 30rpx;
+      height: 30rpx;
+      vertical-align: middle;
+    }
+    text {
+      font-size: 30rpx;
+      color: #999;
+      margin-left: 10rpx;
+    }
+  }
+</style>
+<template>
+  <view class="bottom-loading" wx:if="{{show}}">
+    <image src="../images/loadding.gif"></image>
+    <text>{{message}}</text>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy';
+  export default class BottomLoading extends wepy.component {
+    props = {
+      message: {
+        type: String,
+        default: '努力加载中……'
+      },
+      show: {
+        type: Boolean,
+        default: false
+      }
+    }
+  }
+</script>

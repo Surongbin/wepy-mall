@@ -1,0 +1,32 @@
+<template>
+    <view class="section">
+        <view class="section__title">省市区选择器</view>
+        <picker mode="region" bindchange="bindRegionChange" value="{{region}}" custom-item="{{customItem}}">
+            <view class="picker">
+                当前选择：{{selectArea[0]}}，{{selectArea[1]}}，{{selectArea[2]}}
+            </view>
+        </picker>
+    </view>
+</template>
+<script>
+    import wepy from 'wepy'
+    import regionData from '../utils/regions.js'
+    export default class SelectArea extends wepy.component {
+        data = {
+            region: regionData,
+            customItem: '全部',
+            selectArea: []
+        }
+        methods = {
+            bindRegionChange(e) {
+                console.log('picker发送选择改变，携带值为', e.detail.value)
+//                this.setData({
+//                    region: e.detail.value
+//                })
+                this.selectArea = e.detail.value;
+            }
+        }
+    }
+</script>
+<style lang='less'>
+</style>

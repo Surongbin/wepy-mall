@@ -1,0 +1,17 @@
+<template>
+    <selectarea></selectarea>
+</template>
+<script>
+    import wepy from 'wepy'
+    import SelectArea from 'components/select-area'
+    export default class Delivery extends wepy.page {
+        components = {
+            selectarea: SelectArea
+        }
+        onLoad (option) {
+            console.log(option);
+        }
+    }
+</script>
+<style lang='less'>
+</style>

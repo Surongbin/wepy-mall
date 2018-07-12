@@ -1,0 +1,241 @@
+<style lang="less">
+  .swiper-container {
+    position: relative;
+  }
+  .dots {
+    position: absolute;
+    bottom: 20px;
+    text-align:center;
+    height: 24px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    .dot {
+      margin: 0 5px;
+      width: 50px;
+      height: 2px;
+      background-color: hsla(0,0%,74%,.4);
+      &.active {
+         background-color: hsla(0,0%,100%,.8);
+      }
+    }
+  }
+  .slide-image {
+    width:100%;
+    height:100%;
+    background-size: cover;
+    background-position: 50%;
+    background-repeat: no-repeat;
+  }
+  .swiper-container {
+    .baby {
+      .title {
+        width: 750rpx;
+        height: 311rpx;
+      }
+      .name {
+        position: absolute;
+        right: 10rpx;
+        bottom: 20rpx;
+        width: 198rpx;
+        height: 71rpx;
+      }
+    }
+    .daying {
+      text-align: center;
+      .title {
+        width: 616rpx;
+        height: 255rpx;
+      }
+      .more {
+        color: #ac9e81;
+        font-size: 30rpx;
+        margin-top: 30rpx;
+      }
+    }
+    .change {
+      text-align: center;
+      .title {
+        width: 478rpx;
+        height: 128rpx;
+         margin-top: 46rpx;
+      }
+      .more {
+        color: #34a584;
+        font-size: 30rpx;
+        margin-top: 30rpx;
+      }
+    }
+  }
+  .promo {
+    >view {
+      position: relative;
+    }
+    .category_img {
+      width: 100%;
+      height: 436rpx;
+
+    }
+    .title {
+      font-size: 24rpx;
+      position: absolute;
+      top: 30rpx;
+      left:0;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+    }
+    .desc {
+      font-size: 34rpx;
+      position: absolute;
+      top: 78rpx;
+      left:0;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+    }
+    .black {
+      .title, .desc {
+        color: rgb(51,51,51);
+      }
+    }
+  }
+  .menus {
+    padding: 60rpx 32rpx;
+    box-sizing: border-box;
+  }
+</style>
+<template>
+  <header></header>
+  <view style="height:{{height}}px;" class="swiper-container">
+    <swiper indicator-dots="{{indicatorDots}}"
+            autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}"
+            bindchange="toChange"
+            current="{{swiperCurrent}}"
+            style="width:100%;height:100%;"
+            class="swiper">
+      <!--<block wx:for="{{bannerUrls}}">-->
+        <!--<swiper-item>-->
+          <!--<view style="background-image:url({{item}});" class="slide-image">-->
+            <!--<image src="https://mtshop1.meitudata.com/5b0bcd0689e7361786.png"></image>-->
+            <!--<image src="https://mtshop1.meitudata.com/5b038ea544a6c48929.png" class="baby"></image>-->
+          <!--</view>-->
+        <!--</swiper-item>-->
+      <!--</block>-->
+      <swiper-item>
+        <view style="background-image:url({{bannerUrls[0]}});" class="slide-image baby">
+          <image src="https://mtshop1.meitudata.com/5b0bcd0689e7361786.png" class="title"></image>
+          <image src="https://mtshop1.meitudata.com/5b038ea544a6c48929.png" class="name"></image>
+        </view>
+      </swiper-item>
+      <swiper-item>
+        <view style="background-image:url({{bannerUrls[1]}});" class="slide-image daying">
+          <image src="https://mtshop1.meitudata.com/5aefb7db775fb43302.png" class="title"></image>
+          <view class="more">了解更多 ></view>
+        </view>
+      </swiper-item>
+      <swiper-item>
+        <view style="background-image:url({{bannerUrls[2]}});" class="slide-image change">
+          <image src="https://mtshop1.meitudata.com/5b01916ba960417257.png" class="title"></image>
+          <view class="more">估价升值旧机 ></view>
+        </view>
+      </swiper-item>
+      <swiper-item>
+        <view style="background-image:url({{bannerUrls[3]}});" class="slide-image">
+        </view>
+      </swiper-item>
+    </swiper>
+    <view class="dots">
+      <block wx:for="{{bannerUrls}}" wx:key="unique">
+        <view class="dot {{index === swiperCurrent?'active':''}}"></view>
+      </block>
+    </view>
+  </view>
+  <view class="promo">
+    <block wx:for="{{category}}" wx:key="unique">
+      <view class="{{item.style}}">
+        <image src="{{item.imgUrl}}" class="category_img"></image>
+        <text class="title">{{item.title}}</text>
+        <text class="desc">{{item.desc}}</text>
+      </view>
+    </block>
+  </view>
+  <view class="menus">
+    <menulist :menulist="menulist"></menulist>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import Header from '@/components/header'
+  import MenuList from '@/components/menulist'
+
+  export default class Slider extends wepy.page {
+    config = {
+      window: {
+        backgroundTextStyle: 'light',
+        navigationBarBackgroundColor: '#fff',
+        navigationBarTitleText: 'WeChat',
+        navigationBarTextStyle: 'black'
+      }
+    };
+    data = {
+      bannerUrls: [
+        '//mtshop1.meitudata.com/5b039337654a717823.jpg',
+        '//mtshop1.meitudata.com/5aeeefb9ca38d21951.jpg',
+        '//mtshop1.meitudata.com/5af00aca8be2742380.jpg',
+        '//mtshop1.meitudata.com/5af00978998e535474.jpg'
+      ],
+      category: [{
+        imgUrl: '//mtshop1.meitudata.com/5aa1f978d1a4099789.jpg',
+        title: '美图M8s粉蓝cp清新标准版',
+        desc: '无需预约，开放购买',
+        style: 'black'
+      }, {
+        imgUrl: '//mtshop1.meitudata.com/5a41f9eb4fae527308.jpg',
+        title: '只拍大片',
+        desc: '美图V6全球摄影作品展',
+        style: 'white'
+      }, {
+        imgUrl: '//mtshop1.meitudata.com/5a3885365465277621.jpg',
+        title: '美图手机',
+        desc: '线下体验店',
+        style: 'white'
+      }, {
+        imgUrl: '//mtshop1.meitudata.com/5a9f4c2b97df171964.jpg',
+        title: '美图V6高级定制版',
+        desc: '奢华专属，开放购买',
+        style: 'white'
+      }],
+      menulist: [{
+        text: '选购及了解',
+        url: '',
+        list: [{
+          text: '美图T9',
+          url: ''
+        },{
+          text: '美图V6',
+          url: ''
+        },{
+          text: '美图M8s',
+          url: ''
+        }]
+      }],
+      height: 0,
+      autoplay: false,
+      interval: 5000,
+      circular: true,
+      duration: 1000,
+      swiperCurrent: 0
+    };
+    components = {
+      header: Header,
+      menulist: MenuList
+    };
+    toChange(e) {
+      this.swiperCurrent = e.detail.current;
+    }
+    onLoad() {
+      this.height = wx.getSystemInfoSync().windowHeight-48;
+    }
+  }
+</script>

@@ -1,0 +1,63 @@
+<style type="less">
+  .menuitem {
+    position: relative;
+    height: 76rpx;
+    line-height: 76rpx;
+    font-size: 24rpx;
+    color: #000;
+    font-weight: normal;
+    /*border-bottom: 1px solid hsla(0,0%,90%,.2);*/
+    border-color: #dedede;
+    :before {
+      content: "";
+      height: 1rpx;
+      transform-origin: 0 50%;
+      width: 200%;
+      -webkit-transform: scale(.5);
+      -ms-transform: scale(.5);
+      transform: scale(.5);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      background-color: hsla(0,0%,90%,.2);
+      background-color: #dedede;
+    }
+    .expand {
+      float: right;
+      color: #999;
+      margin-right: 16rpx;
+    }
+    &.submenu {
+      padding: 0 30rpx;
+      :before {
+        display: none;
+      }
+     }
+  }
+</style>
+<template>
+  <view class="menuitem" @tap="tap({{menu}})">
+    <text>{{menu.text}}</text>
+    <text wx:if="{{menu.list && menu.list.length > 0}}" class="expand">+</text>
+  </view>
+</template>
+<script>
+  import wepy from 'wepy'
+
+  export default class MenuItem extends wepy.component {
+    props = {
+      menu: {
+        type: Object,
+        default: {}
+      }
+    }
+    methods = {
+      tap (menu) {
+        this.$emit('tapmenu', menu);
+
+//        this.gitem.childname = `Child Random(${Math.random()})`
+//        console.log(`Clicked Group ${this.$parent.$index}. Item ${this.$index}, ID is ${this.gitem.childid}`)
+      }
+    }
+  }
+</script>
