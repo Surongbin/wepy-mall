@@ -106,7 +106,6 @@
   }
 </style>
 <template>
-  <header></header>
   <view style="height:{{height}}px;" class="swiper-container">
     <swiper indicator-dots="{{indicatorDots}}"
             autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}"
@@ -166,7 +165,6 @@
 </template>
 <script>
   import wepy from 'wepy'
-  import Header from '@/components/header'
   import MenuList from '@/components/menulist'
 
   export default class Slider extends wepy.page {
@@ -228,7 +226,6 @@
       swiperCurrent: 0
     };
     components = {
-      header: Header,
       menulist: MenuList
     };
     toChange(e) {

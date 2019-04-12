@@ -3,7 +3,7 @@
         <text class="title">全场满99元包邮</text>
         <repeat for="{{list}}" key="index" index="index" item="item">
             <view class="box">
-                <swipedelete :swipeData="item">
+                <swipedelete :swipeData="item" :itemid="index" @deleteItem.user="deleteItem">
                     <view class="goods">
                         <view data-item="{{item}}" data-index="{{index}}" class="iconfont {{item.ischecked?'icon-checkcircle':'icon-checknormal'}}" @tap.stop="selectTap"></view>
                         <!--<icon type="success" color="{{item.ischecked?'red': rgba(153,153,153)}}" size="46" @tap.stop="selectTap(item)"></icon>-->
@@ -43,7 +43,7 @@
 <script>
     import wepy from 'wepy'
     import api from '../api/cart.js'
-    import SwipeDelete from 'components/swiper-delete'
+    import SwipeDelete from 'components/swiper-delete-left'
     export default class ShopCart extends wepy.component {
         props = {
 
@@ -77,35 +77,38 @@
                     price: 89,
                     spec_image: '//mshopimg3.meitudata.com/596c1a9059d3056182.jpg',
                     spec_name: '白色'
-                },{
-                    id: 3,
-                    product_name: '美图自拍第二代遥控器',
-                    count: 1,
-                    price: 89,
-                    spec_image: '//mshopimg3.meitudata.com/596c1a9059d3056182.jpg',
-                    spec_name: '白色'
-                },{
-                    id: 4,
-                    product_name: '美图自拍第二代遥控器',
-                    count: 1,
-                    price: 89,
-                    spec_image: '//mshopimg3.meitudata.com/596c1a9059d3056182.jpg',
-                    spec_name: '白色'
-                },{
-                    id: 5,
-                    product_name: '美图自拍第二代遥控器',
-                    count: 1,
-                    price: 89,
-                    spec_image: '//mshopimg3.meitudata.com/596c1a9059d3056182.jpg',
-                    spec_name: '白色'
-                },{
-                    id: 6,
-                    product_name: '美图自拍第二代遥控器',
-                    count: 1,
-                    price: 89,
-                    spec_image: '//mshopimg3.meitudata.com/596c1a9059d3056182.jpg',
-                    spec_name: '白色'
-                }];
+                }
+//                ,{
+//                    id: 3,
+//                    product_name: '美图自拍第二代遥控器',
+//                    count: 1,
+//                    price: 89,
+//                    spec_image: '//mshopimg3.meitudata.com/596c1a9059d3056182.jpg',
+//                    spec_name: '白色'
+//                }
+//                ,{
+//                    id: 4,
+//                    product_name: '美图自拍第二代遥控器',
+//                    count: 1,
+//                    price: 89,
+//                    spec_image: '//mshopimg3.meitudata.com/596c1a9059d3056182.jpg',
+//                    spec_name: '白色'
+//                },{
+//                    id: 5,
+//                    product_name: '美图自拍第二代遥控器',
+//                    count: 1,
+//                    price: 89,
+//                    spec_image: '//mshopimg3.meitudata.com/596c1a9059d3056182.jpg',
+//                    spec_name: '白色'
+//                },{
+//                    id: 6,
+//                    product_name: '美图自拍第二代遥控器',
+//                    count: 1,
+//                    price: 89,
+//                    spec_image: '//mshopimg3.meitudata.com/596c1a9059d3056182.jpg',
+//                    spec_name: '白色'
+//                }
+                ];
                 this.$apply();
             }
         }
@@ -119,7 +122,7 @@
                 this.totalPrice = 0;
                 this.list.map((item) => {
                     if (item.ischecked) {
-                        this.totalPrice += item.price;
+                        this.totalPrice += item.price * item.count;
                     }
                 });
                 return this.totalPrice;
@@ -158,6 +161,16 @@
                 let item = this.list[index];
                 item.count++;
             },
+            deleteItem(itemid) {
+                console.log('删除' + itemid);
+            }
+        }
+        events = {
+            resetLeft() {
+                this.list.map((item) => {
+                    item.left = 0;
+                });
+            }
         }
     }
 </script>
@@ -175,10 +188,6 @@
             line-height: 70rpx;
             padding-left: 29rpx;
         }
-        /*.box {*/
-            /*overflow-x: auto;*/
-            /*white-space: nowrap;*/
-        /*}*/
         .box {
             height: 238rpx;
             border-bottom: 3px solid #efeff4;
@@ -187,20 +196,22 @@
             position: relative;
             display: inline-block;
             font-size: 28rpx;
-            padding: 25rpx 29rpx;
+            /*padding: 25rpx 29rpx;*/
             height: 238rpx;
+            line-height:238rpx;
             width: 100%;
             box-sizing: border-box;
             color: #333;
             background: #fff;
-
             &:last-child {
                 border: 0;
              }
             .goods_image {
                 /*height: 100%;*/
                 float: left;
-                margin-top: 30rpx;
+                /*margin-top: 30rpx;*/
+                margin-top: 34rpx;
+                margin-left: 55rpx;
             }
             image {
                 height: 120rpx;
@@ -230,10 +241,9 @@
                 line-height: 49rpx;
                 text-align: center;
                 flex: 1;
-                /*border: 1rpx solid #efeff4;*/
             }
             .goods_center {
-                /*width: 100%;*/
+                width: 100%;
                 height: 100%;
                 margin-left: 120rpx;
                 /*margin-left: 269rpx;*/
@@ -248,12 +258,12 @@
                 top:0;
             }
             .goods_name {
-                margin-top: 31rpx;
+                /*margin-top: 31rpx;*/
                 height: 100rpx;
             }
             .goods_price {
                 text-align: right;
-                margin: 56rpx 0;
+                /*margin: 56rpx 0;*/
             }
         }
     }

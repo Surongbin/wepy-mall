@@ -1,13 +1,13 @@
 <!--左滑删除-->
 <template>
-    <scroll-view class="swipe-left" @touchstart="touchstart" @touchend="touchend" data-itemid="{{itemid}}" scroll-left='{{left}}' scroll-x="true" scroll-into-view="{{toView}}" style="width: 100%;" upper-threshold="{{haftDelta}}" lower-threshold="{{haftDelta}}" scroll-with-animation="true" bindscroll="bindscroll" bindscrolltoupper="bindscrolltoupper" bindscrolltolower="bindscrolltolower">
-        <view class="swipe-content" id="{{'content'+swipeData.id}}">
+    <view class="swipe-left" @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend"  data-item="{{swipeData}}" data-itemid="{{itemid}}" style="width: 100%;">
+        <view class="swipe-content" id="{{'content'+swipeData.id}}" data-itemid="{{itemid}}" data-item="{{swipeData}}" style="margin-left:{{swipeData.left}}rpx;">
             <slot></slot>
         </view>
         <view class="swipe-opts" id="{{'id'+swipeData.id}}">
             <view class="opts-delete" @tap.stop="deleteItem" data-itemid="{{swipeData.id}}">删除</view>
         </view>
-    </scroll-view>
+    </view>
 </template>
 <script>
     import wepy from 'wepy'
@@ -32,38 +32,38 @@
             scrollEvent: ''
         }
         methods = {
-            bindscrolltoupper(e) {
-                this.toView = 'content' + this.targetid;
-            },
-            bindscrolltolower(e) {
-                this.toView = 'id' + this.targetid;
-            },
-            bindscroll(e) {
-                this.scrollEvent = e;
-                if (!this.maxScrollLeft) {
-                    this.maxScrollLeft = e.detail.scrollWidth - wx.getSystemInfoSync().windowWidth;
-                    this.haftDelta = this.maxScrollLeft/2;
-                }
-                this.targetid = e.target.dataset.itemid;
-            },
-            touchstart(e) {
-                if (this.targetid && e.currentTarget && e.currentTarget.dataset.itemid !== this.targetid) {
-                    this.toView = 'content' + this.targetid;
+            touchstart (e) {
+                if (e.currentTarget && e.currentTarget.dataset.itemid !== this.targetid) {
+                    this.$emit('resetLeft');
                 }
                 this.targetid = e.currentTarget.dataset.itemid;
+                this.startX = e.touches[0].clientX;
+                this.moveX = e.touches[0].clientX;
             },
-            touchend(evt) {
-                let e = this.scrollEvent;
-                if (!e.detail) {
+            touchmove (e) {
+                var touch = e.touches[0];
+                var distanceX = this.moveX - touch.clientX;
+//                let target = e.currentTarget.dataset.swipeData;
+                if (Math.abs(distanceX) < 20) {
                     return;
                 }
-                let scrollLeft = e.detail.scrollLeft;
-                if (scrollLeft >= this.haftDelta) {
-                    this.toView = 'id' + this.targetid;
+                if (distanceX < 0) {
+                    this.left = 0;
+                } else if (distanceX > 140) {
+                    this.left = -140;
                 } else {
-                    this.toView = 'content' + this.targetid;
+                    this.left = -distanceX;
                 }
+                this.swipeData.left = this.left;
                 this.$apply();
+            },
+            touchend (evt) {
+                if (this.left <= -70) {
+                    this.left = -140;
+                } else {
+                    this.left = 0;
+                }
+                this.swipeData.left = this.left;
             },
             deleteItem(e) {
                 let itemid = e.currentTarget.dataset.itemid;
@@ -77,16 +77,13 @@
         position: relative;
         height: 100%;
         width: 100%;
-        overflow-y: hidden;;
-        overflow-x: auto;
         white-space: nowrap;
-        &::-webkit-scrollbar {
-            display: none;
-        }
+        overflow: hidden;
         .swipe-content {
             display: inline-block;
-            width: 100%;
             height: 100%;
+            width: 100%;
+            transition: all .1s ease;
         }
         .swipe-opts {
             display: inline-block;

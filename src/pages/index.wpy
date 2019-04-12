@@ -116,12 +116,11 @@
     async getBanners() {
       const res = await api.banners();
       if (res.meta.code === 0 && res.response.list.small_shop.length > 0) {
-        this.bannerUrls = ['//mtshop1.meitudata.com/5b3228fc9ed4c86101.jpg',
-          '//mtshop1.meitudata.com/5b1fb949b97bb80667.jpg'];// res.response.list.small_shop;
-        this.$apply();
+        this.bannerUrls = ['//mtshop1.meitudata.com/5b3228fc9ed4c86101.jpg'];
+//          '//mtshop1.meitudata.com/5b1fb949b97bb80667.jpg'];// res.response.list.small_shop;
       }
-      this.bannerUrls = ['//mtshop1.meitudata.com/5b3228fc9ed4c86101.jpg',
-        '//mtshop1.meitudata.com/5b1fb949b97bb80667.jpg'];// res.response.list.small_shop;
+      this.bannerUrls = ['//mtshop1.meitudata.com/5b3228fc9ed4c86101.jpg'];
+//        '//mtshop1.meitudata.com/5b1fb949b97bb80667.jpg'];// res.response.list.small_shop;
       this.$apply();
     }
     // 获取商品接口没有做分页

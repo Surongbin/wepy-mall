@@ -2,16 +2,22 @@
 <style>
 </style>
 <template>
-  <button type="default" bindtap="jump"> navigateTo跳转 </button>
-  <button type="default" bindtap="redirectTo"> redirectTo跳转 </button>
-  <button type="default" bindtap="switchTab"> switchTab跳转 </button>
-  <shopcart></shopcart>
+  <view style="height:{{height}}px">
+    <button type="default" bindtap="jump"> navigateTo跳转 </button>
+    <button type="default" bindtap="redirectTo"> redirectTo跳转 </button>
+    <button type="default" bindtap="switchTab"> switchTab跳转 </button>
+    <shopcart></shopcart>
+  </view>
+
 </template>
 <script>
   import wepy from 'wepy'
   import ShopCart from 'components/shop-cart'
 
   export default class Cart extends wepy.page {
+    data = {
+      height: 0
+    }
     components = {
       shopcart : ShopCart
     }
@@ -34,6 +40,9 @@
           url: '/pages/personal/delivery?param=1',   //注意switchTab只能跳转到带有tab的页面，不能跳转到不带tab的页面
         })
       }
+    }
+    onLoad() {
+      this.height = wx.getSystemInfoSync().windowHeight;
     }
     onShow() {
       this.$invoke('shopcart', 'getList');

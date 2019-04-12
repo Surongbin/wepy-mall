@@ -16,7 +16,6 @@
 <script>
   import wepy from 'wepy'
   import Slider from '@/components/slider'
-  import Header from '@/components/header'
 
   export default class Home extends wepy.page {
     config = {
@@ -39,7 +38,6 @@
     };
     components = {
       slider: Slider,
-      header: Header
     };
     toChange(e) {
       console.log('swiperChange');
